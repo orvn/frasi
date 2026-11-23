@@ -2,26 +2,31 @@
    /* -------------------------------------------------------------------------
      Colors
   -------------------------------------------------------------------------- */
-   --woodsmoke: #0d0e12;
-   --tuna: #323340;
+   --persian: #2233a8;
+   --koamaru: #151f6e;
 
-   --bone: #e2d8ca;
-   --sandstone: #7a7268;
-   --merlin: #3e3c38;
+   --parchment: #f3ead6;
+   --spanish-quarter: #f8f1e1;
+   --pampas: #fdfdfc;
 
-   --tan: #c9a97a;
-   --buff: #dab98a;
-   --tobacco: #7a6548;
+   --tint: rgb(34 51 168 / 0.11);
+   --cut-guide: rgb(34 51 168 / 0.45);
 
-   --cinnabar: #d96060;
+   /* Word match hues */
+   --match-1: oklch(0.56 0.14 232);
+   --match-2: oklch(0.5 0.21 298);
+   --match-3: oklch(0.55 0.1 192);
+   --match-4: oklch(0.3 0.09 262);
+   --match-5: oklch(0.56 0.15 268);
 
    /* -------------------------------------------------------------------------
      Typography
   -------------------------------------------------------------------------- */
 
-   /* Sample fonts */
-   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-      Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+   /* Self hosted, see @font-face in global.scss */
+   --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+   --font-sans: 'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont,
+      'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
    --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo,
       Consolas, 'DejaVu Sans Mono', monospace;
 
@@ -40,16 +45,16 @@
      Layout
   -------------------------------------------------------------------------- */
    --container-width: 75rem;
-   --container-padding: 2rem;
-   --header-height: 4rem;
+   --container-padding: 1.75rem;
+   --page-padding: 1.75rem;
 
 
    /* -------------------------------------------------------------------------
      Shadows
   -------------------------------------------------------------------------- */
-   --shadow-sm: 0 0.0625rem 0.1875rem 0 rgb(0 0 0 / 0.4);
-   --shadow-md: 0 0.25rem 0.5rem -0.0625rem rgb(0 0 0 / 0.5), 0 0.125rem 0.25rem -0.125rem rgb(0 0 0 / 0.4);
-   --shadow-lg: 0 0.75rem 1.25rem -0.1875rem rgb(0 0 0 / 0.6), 0 0.25rem 0.5rem -0.25rem rgb(0 0 0 / 0.5);
+   --shadow-sm: 0 0.0625rem 0.1875rem 0 rgb(34 51 168 / 0.12);
+   --shadow-md: 0 0.25rem 0.5rem -0.0625rem rgb(34 51 168 / 0.16), 0 0.125rem 0.25rem -0.125rem rgb(34 51 168 / 0.12);
+   --shadow-lg: 0 0.75rem 1.25rem -0.1875rem rgb(34 51 168 / 0.2), 0 0.25rem 0.5rem -0.25rem rgb(34 51 168 / 0.16);
 
    /* -------------------------------------------------------------------------
      Z-index
