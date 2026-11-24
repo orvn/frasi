@@ -1,0 +1,38 @@
+name: Set 1
+subject: Italian phrases
+
+labels:
+  en: English
+  it: Italian
+
+settings:
+  word_match: colour
+  cream_print: false
+  cut_guides: true
+
+cards[25]{q_en,q_it,a_en,a_it}:
+  "{1How}'s it {2going}?","{1Come} {2va}?","{1Pretty} {2good}, {3thanks}! {4And} {5you}?","{1Abbastanza} {2bene}, {3grazie}! {4E} {5tu}?"
+  "What are you up to?","Che fai di bello?","Nothing special, just relaxing.","Niente di speciale, mi rilasso un po'."
+  "{1Are you} {2sure}?","{1Sei} {2sicuro/a}?","{1Yeah}, {2absolutely}!","{1Sì}, {2certo}!"
+  "How come?","Come mai?","I don't really know either.","Non lo so bene neanch'io."
+  "Are you coming?","Vieni?","{1Yes}, {2we're} {3on our way}!","{1Sì}, {2stiamo} {3arrivando}!"
+  "{1What time} {2are you arriving}?","{1A che ora} {2arrivate}?","{1Around} {2eight}, {3I think}.","{1Verso} {2le otto}, {3credo}."
+  "{1Is} {2tomorrow} {1okay}?","{1Va bene} {2domani}?","{1Tomorrow} {3works} {2for us}!","{1Domani} {2per noi} {3va bene}!"
+  "Should {2we wait} {1for you}?","{1Ti} {2aspettiamo}?","{1No}, {2go ahead} {3without} {4me}.","{1No}, {2andate pure} {3senza} di {4me}."
+  "{1Do you have} {2a table} {3for} {4two}?","{1Avete} {2un tavolo} {3per} {4due}?","{1Yes}, {2there's} {3one} {4outside}.","{1Sì}, {2ce n'è} {3uno} {4fuori}."
+  "{1What} {2do you recommend}?","{1Cosa} mi {2consigli}?","{1I}{2'd try} {3the pasta}.","{1Io} {2proverei} {3la pasta}."
+  "{1Can we} {2pay} {3by} {4card}?","{1Possiamo} {2pagare} {3con} la {4carta}?","{1Sure}, {2no} {3problem}.","{1Certo}, {2nessun} {3problema}."
+  "{1Do you have} {2anything} {3available}?","{1Avete} {2qualcosa} di {3disponibile}?","Yes, we have one room left.","Sì, ci è rimasta una camera."
+  "{1Did you} {2understand}?","{1Hai} {2capito}?","{1Not} {2really}, {3can you} {4repeat}?","{1Non} {2proprio}, {3puoi} {4ripetere}?"
+  "{1Do you speak} {2Italian}?","{1Parli} {2italiano}?","{1A little}, {2but} {3not} {4very} {5well}.","{1Un po'}, {2ma} {3non} {4molto} {5bene}."
+  "What do you mean?","In che senso?","{1I mean} it's {3too} {2expensive}.","{1Voglio dire} che {2costa} {3troppo}."
+  "{1Do you know} {2where} {3it is}?","{1Sai} {2dov}{3'è}?","No, I have no idea.","No, non ne ho idea."
+  "Do you like it?","Ti piace?","{1Yes}, {2I} {4really} {3like it}!","{1Sì}, {2mi} {3piace} {4un sacco}!"
+  "Is it worth it?","Ne vale la pena?","{1Definitely}, {2it's worth it}.","{1Assolutamente}, {2ne vale la pena}."
+  "{1What} do {2you think}?","{1Che} ne {2pensi}?","{1It's not} {2bad}, {3actually}.","{1Non è} {2male}, {3a dire il vero}."
+  "{1Do you feel like} {2going out}?","{1Ti va di} {2uscire}?","{1Not} {2really}, {3I'm} {4tired}.","{1Non} {2tanto}, {3sono} {4stanco/a}."
+  "Is {1everything} {2okay}?","{1Tutto} {2a posto}?","{1Yes}, {2everything's} {3fine}.","{1Sì}, {2tutto} {3bene}."
+  "{2Can you give} {1me} {3a hand}?","{1Mi} {2dai} {3una mano}?","{1Of course}, {2what} {3do you need}?","{1Certo}, {2di cosa} {3hai bisogno}?"
+  "{1How long} {2does it take}?","{1Quanto} {2ci vuole}?","{1About} {2twenty} {3minutes}.","{1Circa} {2venti} {3minuti}."
+  "Shall we go?","Andiamo?","{1Yes}, {2let's go}!","{1Sì}, {2andiamo}!"
+  "{1Can I} {2ask you} {3something}?","{1Posso} {2chiederti} {3una cosa}?","{1Of course}, {2tell me}.","{1Certo}, {2dimmi}."
