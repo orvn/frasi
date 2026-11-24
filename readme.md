@@ -1,8 +1,10 @@
 ![Alpine.js](https://img.shields.io/badge/Alpine.js-8BC0D0?style=flat&logo=alpinedotjs&logoColor=black) ![Astro](https://img.shields.io/badge/Astro-FF5D01?style=flat&logo=astro&logoColor=white) ![Bun](https://img.shields.io/badge/Bun-000000?style=flat&logo=bun&logoColor=white) ![Conventional Commits](https://img.shields.io/badge/Conventional_Commits-FE5196?style=flat&logo=conventionalcommits&logoColor=white)
 
-# Astro Starter
+# Frasi
 
-A static site template repo built with [Astro](https://astro.build) and [Alpine.js](https://alpinejs.dev). Optimised for minimal Javascript footprint, performance, a11y, and SEO.
+Italian phrase flashcards. Browse one card at a time on screen, or print US Letter sheets of eight and cut them out. Matching words across the two languages are colour linked.
+
+Built on a static site template with [Astro](https://astro.build) and [Alpine.js](https://alpinejs.dev). Optimised for minimal Javascript footprint, performance, a11y, and SEO.
 
 ## Stack
 
@@ -31,23 +33,27 @@ _(Use `bun run build` rather than `bun build`, which invokes bun's own bundler i
 ├── public/
 │   ├── _headers          # Cloudflare Pages security headers + CSP
 │   ├── favicon.ico
-│   ├── fonts/            # Selfhosted webfonts
+│   ├── favicon.svg
+│   ├── fonts/            # Self-hosted Source Serif 4 and IBM Plex Sans (variable woff2)
 │   └── robots.txt
 │
 ├── src/
 │   ├── assets/
 │   │   ├── fonts/        # Source fonts (processed by Vite)
-│   │   └── images/       # Images processed by Astro's <Image /> component
+│   │   └── images/       # loggia.jpg, the page background
 │   │
 │   ├── components/
+│   │   ├── Card.astro    # One flashcard face, used on screen and in print
 │   │   ├── Footer.astro
-│   │   ├── Header.astro
-│   │   ├── Nav.astro
+│   │   ├── Header.astro  # Wordmark plus header-meta and header-tools slots
+│   │   ├── Nav.astro     # Unused, kept from the starter
+│   │   ├── Sheet.astro   # One US Letter sheet of 8 cards
 │   │   └── SEO.astro     # <title>, meta, canonical, OG, Twitter card
 │   │
 │   ├── content/
 │   │   ├── global.toon   # Site-wide values (name, URL, description, title postfix)
-│   │   ├── home.toon
+│   │   ├── cards.toon    # The card set, labels and print settings
+│   │   ├── home.toon     # UI strings for the card browser
 │   │   ├── about.toon
 │   │   ├── privacy.toon
 │   │   └── 404.toon
@@ -56,7 +62,8 @@ _(Use `bun run build` rather than `bun build`, which invokes bun's own bundler i
 │   │   └── BaseLayout.astro  # Root HTML shell, accepts SEO + JSON-LD props
 │   │
 │   ├── lib/
-│   │   └── content.ts    # loadGlobal() and loadPage() helpers
+│   │   ├── cards.ts      # Word match markup parser
+│   │   └── content.ts    # loadGlobal(), loadPage() and loadData() helpers
 │   │
 │   ├── pages/
 │   │   ├── index.astro
@@ -64,14 +71,16 @@ _(Use `bun run build` rather than `bun build`, which invokes bun's own bundler i
 │   │   ├── privacy.astro
 │   │   └── 404.astro
 │   │
-│   └── styles/
-│       ├── _breakpoints.scss  # Media query mixins
-│       ├── foundation.min.css # Grid, normalize, base ui
-│       ├── reset.css
-│       ├── variables.css
-│       ├── prose.css          # .markdown long-form styles
-│       ├── x-browser.css      # Browser-specific fixes
-│       └── global.scss        # Entry point, imports the rest
+│   ├── styles/
+│   │   ├── _breakpoints.scss  # Media query mixins
+│   │   ├── foundation.min.css # Grid, normalize, base ui
+│   │   ├── reset.css
+│   │   ├── variables.css      # Palette, fonts, type scale
+│   │   ├── prose.css          # .markdown long-form styles
+│   │   ├── x-browser.css      # Browser-specific fixes
+│   │   └── global.scss        # Entry point, imports the rest, @font-face, print rules
+│   │
+│   └── entrypoint.ts     # Alpine store for the card browser
 │
 ├── astro.config.mjs
 ├── tsconfig.json
@@ -114,6 +123,33 @@ url: https://example.com
 title_postfix: " — Site Name"
 og_image: /og-default.png
 ```
+
+### Cards
+
+`src/content/cards.toon` holds the card set. Each card is one row of four strings, question and answer in both languages:
+
+```
+name: Set 1
+subject: Italian phrases
+
+labels:
+  en: English
+  it: Italian
+
+settings:
+  word_match: colour   # colour | numbers | off
+  cream_print: false   # print on the cream paper colour instead of white
+  cut_guides: true     # dashed cut lines on the print sheets
+
+cards[25]{q_en,q_it,a_en,a_it}:
+  "{1How}'s it {2going}?","{1Come} {2va}?","{1Pretty} {2good}, {3thanks}!","{1Abbastanza} {2bene}, {3grazie}!"
+```
+
+Wrap a word or phrase in `{n…}` to link it to the same number in the other language. In `colour` mode each number gets one of `--match-1` to `--match-5`, in `numbers` mode the words are underlined with a superscript number, and `off` renders plain text. Parsed by `segment()` in `src/lib/cards.ts`, rendered by `Card.astro`. Load the set with `loadData<CardSet>('cards')`.
+
+### Browse and print
+
+State for the card browser lives in an Alpine store registered in `src/entrypoint.ts`: the current view (`browse` or `sheets`), the current card index (persisted to `localStorage`), and `print()`, which switches to the sheets view and then calls `window.print()`. Anything marked `data-noprint` is hidden when printing, and `@page` is set to US Letter with no margin so each `Sheet.astro` fills one page exactly.
 
 ### Adding a content file for a new page
 
@@ -189,17 +225,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 The `title` prop renders as `Page Title - Site Name` in `<title>`. Omit it on the home page to render just the site name.
 
-### Nav links
+### Header slots
 
-Add entries to the `navLinks` array in `src/components/Nav.astro`:
+The header renders the site name, then two named slots any page can fill through `BaseLayout`:
 
-```ts
-const navLinks = [
-  { label: 'Home',    href: '/'       },
-  { label: 'About',   href: '/about'  },
-  { label: 'Blog',    href: '/blog'   },
-];
+```astro
+<BaseLayout>
+  <Fragment slot="header-meta">
+    <span>Italian phrases</span>
+  </Fragment>
+  <Fragment slot="header-tools">
+    <button class="btn btn-primary">Print</button>
+  </Fragment>
+</BaseLayout>
 ```
+
+`header-meta` sits beside the wordmark, `header-tools` is pushed to the right. `src/components/Nav.astro` is left over from the starter and is not rendered.
 
 ### SEO
 
@@ -241,17 +282,19 @@ Generated automatically at build time by `@astrojs/sitemap`. The output file is 
 
 ### Fonts
 
-Self hosted fonts are recommended.
+Fonts are self hosted in `public/fonts/` as variable weight `.woff2`, declared in `src/styles/global.scss` and exposed as `--font-serif` (Source Serif 4, page chrome) and `--font-sans` (IBM Plex Sans, card faces) in `src/styles/variables.css`. Only the latin and latin-ext subsets ship, plus one cyrillic subset of Plex Sans for the numero sign on card numbers.
 
-1. Move font files, ideally `.woff2` in `public/fonts/`
-2. Add `@font-face` declarations in `src/styles/global.scss`
-3. Update `--font-sans` (and/or `--font-display`) in `src/styles/variables.css`
+To add a font:
+
+1. Put the `.woff2` in `public/fonts/`
+2. Add an `@font-face` in `src/styles/global.scss`
+3. Reference it from a font variable in `src/styles/variables.css`
 
 ```css
 @font-face {
   font-family: 'MyFont';
-  src: url('/fonts/myfont-regular.woff2') format('woff2');
-  font-weight: 400;
+  src: url('/fonts/myfont.woff2') format('woff2');
+  font-weight: 400 700;
   font-style: normal;
   font-display: swap;
 }
@@ -301,7 +344,7 @@ Pure CSS tooltip. Add a `data-tooltip` attribute to any element:
 <abbr data-tooltip="HyperText Markup Language">HTML</abbr>
 ```
 
-The tooltip appears below the element on hover. Styled with `--woodsmoke` and `--tuna`.
+The tooltip appears below the element on hover. Styled with `--persian` and `--parchment`.
 
 #### `.video-wrapper`
 
