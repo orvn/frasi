@@ -8,21 +8,51 @@
  * https://docs.astro.build/en/guides/integrations-guide/alpinejs/
  * Without it, Alpine.data() registrations can race against DOM
  * processing, esp in Safari and during virtual navigation
- *
- * Usage in templates:
- *   <div x-data="counter">
- *     <button @click="increment" x-text="count"></button>
- *   </div>
  */
 
 import type { Alpine } from 'alpinejs';
 
+const STORAGE_KEY = 'frasi-index';
+
+// Card browser state, shared between the header tools and the page
+const frasi = {
+  view: 'browse',
+  i: 0,
+  total: 0,
+
+  init() {
+    try {
+      this.i = parseInt(localStorage.getItem(STORAGE_KEY) ?? '0', 10) || 0;
+    } catch {}
+  },
+
+  setup(total: number) {
+    this.total = total;
+    this.go(this.i);
+  },
+
+  go(i: number) {
+    if (!this.total) return;
+    this.i = (i + this.total) % this.total;
+    try {
+      localStorage.setItem(STORAGE_KEY, String(this.i));
+    } catch {}
+  },
+
+  prev() {
+    this.go(this.i - 1);
+  },
+
+  next() {
+    this.go(this.i + 1);
+  },
+
+  print() {
+    this.view = 'sheets';
+    setTimeout(() => window.print(), 400);
+  },
+};
+
 export default (Alpine: Alpine) => {
-  // Example: simple counter component
-  Alpine.data('counter', () => ({
-    count: 0,
-    increment() {
-      this.count++;
-    },
-  }));
+  Alpine.store('frasi', frasi);
 };

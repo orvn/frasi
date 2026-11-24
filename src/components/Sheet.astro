@@ -1,0 +1,65 @@
+---
+import Card from './Card.astro';
+import type { Card as CardData, CardSet } from '../lib/content';
+
+interface Props {
+  cards: CardData[];
+  /** Number printed on the first card of this sheet */
+  first: number;
+  set: CardSet;
+}
+
+const { cards, first, set } = Astro.props;
+const { cream_print, cut_guides, word_match } = set.settings;
+---
+
+<div class:list={['sheet', 'grid-x', { 'is-cream': cream_print, 'has-guides': cut_guides }]}>
+  {cards.map((card, k) => (
+    <div class="slot cell small-6">
+      <Card card={card} number={first + k} labels={set.labels} wordMatch={word_match} />
+    </div>
+  ))}
+</div>
+
+<style>
+  /* US Letter, 0.25in margin leaves exactly 2 × 4in by 4 × 2.625in */
+  .sheet {
+    --card-pad: 3.4cqw;
+    --card-paper: var(--pampas);
+    flex: none;
+    align-content: flex-start;
+    width: 8.5in;
+    height: 11in;
+    padding: 0.25in;
+    background-color: var(--pampas);
+    outline: 0.09375rem solid var(--persian);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .sheet.is-cream {
+    --card-paper: var(--spanish-quarter);
+  }
+
+  .slot {
+    height: 25%;
+  }
+
+  .sheet.has-guides .slot {
+    outline: 0.0625rem dashed var(--cut-guide);
+    outline-offset: -0.03125rem;
+  }
+
+  @media print {
+    /* Pure white so printers lay down no toner on the page background */
+    .sheet {
+      background-color: white;
+      outline: none;
+      break-after: page;
+    }
+
+    .sheet:not(.is-cream) {
+      --card-paper: white;
+    }
+  }
+</style>

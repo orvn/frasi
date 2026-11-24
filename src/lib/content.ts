@@ -38,3 +38,28 @@ export function loadGlobal(): GlobalContent {
 export function loadPage<C = Record<string, unknown>>(name: string): PageContent<C> {
   return decode(readToon(`${name}.toon`)) as unknown as PageContent<C>;
 }
+
+export type WordMatch = 'colour' | 'numbers' | 'off';
+
+export interface Card {
+  q_en: string;
+  q_it: string;
+  a_en: string;
+  a_it: string;
+}
+
+export interface CardSet {
+  name: string;
+  subject: string;
+  labels: { en: string; it: string };
+  settings: {
+    word_match: WordMatch;
+    cream_print: boolean;
+    cut_guides: boolean;
+  };
+  cards: Card[];
+}
+
+export function loadData<T>(name: string): T {
+  return decode(readToon(`${name}.toon`)) as unknown as T;
+}

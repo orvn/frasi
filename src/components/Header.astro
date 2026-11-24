@@ -1,48 +1,58 @@
 ---
-import Nav from './Nav.astro';
 import { loadGlobal } from '../lib/content';
 
 const { name } = loadGlobal();
 ---
 
-<header class="site-header" role="banner">
-  <div class="container header-inner">
-    <a href="/" class="site-logo" aria-label={`${name} — go to homepage`}>
-      {name}
-    </a>
-    <Nav />
+<header class="site-header" role="banner" data-noprint>
+  <div class="header-brand">
+    <a href="/" class="site-logo" aria-label={`${name} — go to homepage`}>{name}</a>
+    <div class="header-meta"><slot name="meta" /></div>
   </div>
+  <slot name="tools" />
 </header>
 
 <style>
   .site-header {
-    position: sticky;
-    top: 0;
-    height: var(--header-height);
-    background-color: rgb(13 14 18 / 0.85);
-    backdrop-filter: blur(0.625rem);
-    -webkit-backdrop-filter: blur(0.625rem);
-    border-bottom: 0.0625rem solid var(--tuna);
-    z-index: var(--z-header);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.875rem 1.5rem;
+    padding: 1.25rem var(--page-padding);
+    border-bottom: 0.09375rem solid var(--persian);
+    background-color: var(--parchment);
   }
 
-  .header-inner {
+  .header-brand {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.875rem;
+    margin-right: auto;
   }
 
   .site-logo {
-    font-weight: 700;
-    font-size: var(--text-lg);
-    color: var(--bone);
+    font-family: var(--font-serif);
+    font-size: 1.625rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--persian);
     text-decoration: none;
-    letter-spacing: -0.02em;
     transition: color 200ms ease;
   }
 
   .site-logo:hover {
-    color: var(--tan);
+    color: var(--koamaru);
+  }
+
+  .header-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.125rem;
+    font-size: 0.9375rem;
+  }
+
+  .header-meta:empty {
+    display: none;
   }
 </style>

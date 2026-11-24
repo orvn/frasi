@@ -1,0 +1,135 @@
+---
+import { segment } from '../lib/cards';
+import type { Card, WordMatch } from '../lib/content';
+
+interface Props {
+  card: Card;
+  number: number;
+  labels: { en: string; it: string };
+  wordMatch: WordMatch;
+}
+
+const { card, number, labels, wordMatch } = Astro.props;
+
+const rows = [
+  { lang: 'en', label: labels.en, text: card.q_en },
+  { lang: 'it', label: labels.it, text: card.q_it },
+  { lang: 'en', label: labels.en, text: card.a_en },
+  { lang: 'it', label: labels.it, text: card.a_it },
+];
+---
+
+<div class="card" data-word-match={wordMatch}>
+  <div class="card-face">
+    <div class="card-frame">
+      {rows.map(({ lang, label, text }) => (
+        <div class="card-row" lang={lang}>
+          <div class="card-label">{label}</div>
+          <div class="card-text"><span>{segment(text).map((s) => s.match
+            ? <><span data-match={s.match}>{s.text}</span>{wordMatch === 'numbers' && <sup>{s.match}</sup>}</>
+            : s.text
+          )}</span></div>
+        </div>
+      ))}
+    </div>
+    <div class="card-number">№ {number}</div>
+  </div>
+</div>
+
+<style>
+  /* Container query units size everything from the card width, so the same
+     face works at 720px on screen and 4in on paper */
+  .card {
+    container-type: inline-size;
+    aspect-ratio: 4 / 2.625;
+    width: 100%;
+    background-color: var(--card-paper, var(--spanish-quarter));
+    overflow: hidden;
+  }
+
+  .card-face {
+    position: relative;
+    height: 100%;
+    padding: var(--card-pad, 3cqw);
+    color: var(--persian);
+    font-family: var(--font-sans);
+    line-height: 1.1;
+  }
+
+  .card-frame {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 0.09375rem solid var(--persian);
+  }
+
+  .card-row {
+    display: flex;
+    flex: 1 1 0;
+    min-height: 0;
+    border-bottom: 0.0625rem solid var(--persian);
+  }
+
+  .card-row[lang='it'] {
+    border-bottom-width: 0.15625rem;
+  }
+
+  .card-row:last-child {
+    border-bottom: 0;
+  }
+
+  .card-label {
+    display: flex;
+    flex: 0 0 20cqw;
+    align-items: center;
+    justify-content: center;
+    border-right: 0.0625rem solid var(--persian);
+    font-size: 3.4cqw;
+  }
+
+  .card-row[lang='it'] .card-label {
+    font-size: 4.2cqw;
+    font-weight: 500;
+  }
+
+  .card-text {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    align-items: center;
+    padding: 0 4cqw 0 2.6cqw;
+    font-size: 4.1cqw;
+  }
+
+  .card-row[lang='it'] .card-text {
+    font-size: 4.8cqw;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  sup {
+    margin-left: 0.1em;
+    font-size: 0.5em;
+  }
+
+  .card-row[lang='it'] sup {
+    font-size: 0.4em;
+  }
+
+  .card-number {
+    position: absolute;
+    top: calc(var(--card-pad, 3cqw) + 1cqw);
+    right: calc(var(--card-pad, 3cqw) + 1.4cqw);
+    font-size: 2.6cqw;
+  }
+
+  [data-word-match='colour'] [data-match='1'] { color: var(--match-1); }
+  [data-word-match='colour'] [data-match='2'] { color: var(--match-2); }
+  [data-word-match='colour'] [data-match='3'] { color: var(--match-3); }
+  [data-word-match='colour'] [data-match='4'] { color: var(--match-4); }
+  [data-word-match='colour'] [data-match='5'] { color: var(--match-5); }
+
+  [data-word-match='numbers'] [data-match] {
+    border-bottom: 0.0625rem solid currentColor;
+  }
+</style>
