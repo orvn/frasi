@@ -1,0 +1,28 @@
+---
+import Card from './Card.astro';
+import type { Card as CardData } from '../lib/content';
+
+interface Props {
+  card: CardData;
+  number: number;
+  labels: { en: string; it: string };
+  shadow?: boolean;
+}
+
+const { card, number, labels, shadow = false } = Astro.props;
+---
+
+<div class="pair">
+  <Card it={card.q_it} en={card.q_en} number={number} labels={labels} shadow={shadow} />
+  <Card it={card.a_it} en={card.a_en} labels={labels} shadow={shadow} />
+</div>
+
+<style>
+  .pair {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pair-gap, 0.75rem);
+    width: 100%;
+    aspect-ratio: 4 / 2.625;
+  }
+</style>

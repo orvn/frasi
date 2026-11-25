@@ -6,7 +6,6 @@ labels:
   it: Italian
 
 settings:
-  word_match: colour
   cream_print: false
   cut_guides: true
 

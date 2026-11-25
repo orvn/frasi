@@ -1,5 +1,5 @@
 ---
-import Card from './Card.astro';
+import CardPair from './CardPair.astro';
 import type { Card as CardData, CardSet } from '../lib/content';
 
 interface Props {
@@ -10,13 +10,13 @@ interface Props {
 }
 
 const { cards, first, set } = Astro.props;
-const { cream_print, cut_guides, word_match } = set.settings;
+const { cream_print, cut_guides } = set.settings;
 ---
 
 <div class:list={['sheet', 'grid-x', { 'is-cream': cream_print, 'has-guides': cut_guides }]}>
   {cards.map((card, k) => (
     <div class="slot cell small-6">
-      <Card card={card} number={first + k} labels={set.labels} wordMatch={word_match} />
+      <CardPair card={card} number={first + k} labels={set.labels} />
     </div>
   ))}
 </div>
@@ -26,6 +26,7 @@ const { cream_print, cut_guides, word_match } = set.settings;
   .sheet {
     --card-pad: 3.4cqw;
     --card-paper: var(--pampas);
+    --pair-gap: 0.5rem;
     flex: none;
     align-content: flex-start;
     width: 8.5in;
@@ -42,12 +43,19 @@ const { cream_print, cut_guides, word_match } = set.settings;
   }
 
   .slot {
+    position: relative;
     height: 25%;
   }
 
-  .sheet.has-guides .slot {
-    outline: 0.0625rem dashed var(--cut-guide);
-    outline-offset: -0.03125rem;
+  /* Drawn as an overlay so it stays above the card paper, straddling the
+     slot edge so neighbouring slots share one line */
+  .sheet.has-guides .slot::after {
+    content: '';
+    position: absolute;
+    inset: -0.03125rem;
+    z-index: 1;
+    border: 0.0625rem dashed var(--cut-guide);
+    pointer-events: none;
   }
 
   @media print {
