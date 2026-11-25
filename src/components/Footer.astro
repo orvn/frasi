@@ -1,15 +1,8 @@
 ---
-import { loadGlobal } from '../lib/content';
-
-const { name } = loadGlobal();
-const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer" role="contentinfo" data-noprint>
   <div class="footer-inner">
-    <p class="footer-copy">
-      &copy; {year} {name}. All rights reserved.
-    </p>
     <nav class="footer-nav" aria-label="Footer navigation">
       <ul role="list">
         <li><a href="/privacy">Privacy</a></li>
@@ -31,11 +24,6 @@ const year = new Date().getFullYear();
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 1rem;
-  }
-
-  .footer-copy {
-    font-size: var(--text-xs);
-    color: var(--persian);
   }
 
   .footer-nav ul {

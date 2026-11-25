@@ -1,14 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Card from '../components/Card.astro';
+import CardPair from '../components/CardPair.astro';
+import Pagination from '../components/Pagination.astro';
 import Sheet from '../components/Sheet.astro';
+import Switch from '../components/Switch.astro';
 import { loadGlobal, loadPage, loadData } from '../lib/content';
 import type { CardSet } from '../lib/content';
 
 const global = loadGlobal();
 const { meta, content } = loadPage('home');
 const c = content as {
-  cards_unit: string;
+  word_match: string;
   views_label: string;
   view_browse: string;
   view_sheets: string;
@@ -21,7 +23,7 @@ const c = content as {
 };
 
 const set = loadData<CardSet>('cards');
-const { labels, settings } = set;
+const { labels } = set;
 const total = set.cards.length;
 
 const perSheet = 8;
@@ -29,9 +31,6 @@ const sheets = Array.from({ length: Math.ceil(total / perSheet) }, (_, n) => ({
   first: n * perSheet + 1,
   cards: set.cards.slice(n * perSheet, (n + 1) * perSheet),
 }));
-
-const [counterStart = '', counterRest = ''] = c.counter.split('{n}');
-const counterEnd = counterRest.replace('{total}', String(total));
 
 const jsonLD = {
   '@context': 'https://schema.org',
@@ -51,8 +50,6 @@ const jsonLD = {
 
   <Fragment slot="header-meta">
     <span>{set.subject}</span>
-    <span>{set.name}</span>
-    <span>{total} {c.cards_unit}</span>
   </Fragment>
 
   <Fragment slot="header-tools">
@@ -85,27 +82,14 @@ const jsonLD = {
       <div class="stage">
         {set.cards.map((card, k) => (
           <div x-show={`$store.frasi.i === ${k}`} x-cloak={k > 0}>
-            <Card card={card} number={k + 1} labels={labels} wordMatch={settings.word_match} />
+            <CardPair card={card} number={k + 1} labels={labels} shadow />
           </div>
         ))}
       </div>
 
-      <div class="controls">
-        <button class="btn btn-outline arrow" aria-label={c.previous} @click="$store.frasi.prev()">←</button>
-        <button class="btn btn-primary arrow" aria-label={c.next} @click="$store.frasi.next()">→</button>
-        <span>{counterStart}<span x-text="$store.frasi.i + 1">1</span>{counterEnd}</span>
-        <span class="hint">{c.keys_hint}</span>
-      </div>
-
-      <div class="chips">
-        {set.cards.map((_, k) => (
-          <button
-            class="chip"
-            :class={`{ 'is-active': $store.frasi.i === ${k} }`}
-            @click={`$store.frasi.go(${k})`}
-          >{k + 1}</button>
-        ))}
-      </div>
+      <Pagination total={total} previous={c.previous} next={c.next} counter={c.counter} hint={c.keys_hint}>
+        <Switch modelField="$store.frasi.wordMatch" label={c.word_match} />
+      </Pagination>
     </div>
   </section>
 
@@ -132,57 +116,6 @@ const jsonLD = {
     max-width: 45rem;
     padding: 1.25rem;
     background-color: var(--parchment);
-  }
-
-  .stage {
-    margin-block: 0.3125rem;
-    outline: 0.09375rem solid var(--persian);
-    outline-offset: 0.3125rem;
-  }
-
-  .controls {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: var(--text-xs);
-  }
-
-  .arrow {
-    width: 2.75rem;
-    height: 2.25rem;
-    padding: 0;
-    font-size: var(--text-sm);
-  }
-
-  .hint {
-    margin-left: auto;
-  }
-
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-  }
-
-  .chip {
-    flex: 0 0 2.125rem;
-    height: 1.875rem;
-    border: 0.0625rem solid var(--persian);
-    background-color: transparent;
-    color: var(--persian);
-    font-size: 0.8125rem;
-    font-variant-numeric: tabular-nums;
-    cursor: pointer;
-    transition: background-color 150ms ease, color 150ms ease;
-  }
-
-  .chip:hover {
-    background-color: var(--tint);
-  }
-
-  .chip.is-active {
-    background-color: var(--persian);
-    color: var(--parchment);
   }
 
   .sheets-note {

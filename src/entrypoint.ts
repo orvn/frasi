@@ -12,17 +12,20 @@
 
 import type { Alpine } from 'alpinejs';
 
-const STORAGE_KEY = 'frasi-index';
+const INDEX_KEY = 'frasi-index';
+const MATCH_KEY = 'frasi-word-match';
 
 // Card browser state, shared between the header tools and the page
 const frasi = {
   view: 'browse',
   i: 0,
   total: 0,
+  wordMatch: false,
 
   init() {
     try {
-      this.i = parseInt(localStorage.getItem(STORAGE_KEY) ?? '0', 10) || 0;
+      this.i = parseInt(localStorage.getItem(INDEX_KEY) ?? '0', 10) || 0;
+      this.wordMatch = localStorage.getItem(MATCH_KEY) === 'on';
     } catch {}
   },
 
@@ -35,7 +38,7 @@ const frasi = {
     if (!this.total) return;
     this.i = (i + this.total) % this.total;
     try {
-      localStorage.setItem(STORAGE_KEY, String(this.i));
+      localStorage.setItem(INDEX_KEY, String(this.i));
     } catch {}
   },
 
@@ -55,4 +58,11 @@ const frasi = {
 
 export default (Alpine: Alpine) => {
   Alpine.store('frasi', frasi);
+
+  Alpine.effect(() => {
+    const { wordMatch } = Alpine.store('frasi') as typeof frasi;
+    try {
+      localStorage.setItem(MATCH_KEY, wordMatch ? 'on' : 'off');
+    } catch {}
+  });
 };

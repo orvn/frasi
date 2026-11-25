@@ -39,8 +39,6 @@ export function loadPage<C = Record<string, unknown>>(name: string): PageContent
   return decode(readToon(`${name}.toon`)) as unknown as PageContent<C>;
 }
 
-export type WordMatch = 'colour' | 'numbers' | 'off';
-
 export interface Card {
   q_en: string;
   q_it: string;
@@ -53,7 +51,6 @@ export interface CardSet {
   subject: string;
   labels: { en: string; it: string };
   settings: {
-    word_match: WordMatch;
     cream_print: boolean;
     cut_guides: boolean;
   };
