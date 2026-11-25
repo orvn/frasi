@@ -6,7 +6,7 @@ meta:
 options: null
 
 content:
-  cards_unit: cards
+  word_match: Word matching
   views_label: View
   view_browse: Browse
   view_sheets: Print sheets

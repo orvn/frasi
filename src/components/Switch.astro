@@ -1,0 +1,73 @@
+---
+interface Props {
+  /** Alpine expression for the boolean to bind, e.g. "$store.frasi.wordMatch" */
+  modelField: string;
+  label?: string;
+}
+
+const { modelField, label } = Astro.props;
+---
+
+<label class="switch-control">
+  {label && <span class="switch-label">{label}</span>}
+  <button
+    type="button"
+    class="switch-track"
+    role="switch"
+    :aria-checked={`String(${modelField})`}
+    :class={`{ 'is-on': ${modelField} }`}
+    @click={`${modelField} = !${modelField}; $dispatch('change')`}
+  >
+    <span class="switch-thumb" aria-hidden="true"></span>
+  </button>
+</label>
+
+<style>
+  .switch-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+
+  .switch-label {
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: var(--persian);
+    white-space: nowrap;
+    line-height: 1;
+  }
+
+  .switch-track {
+    position: relative;
+    flex-shrink: 0;
+    width: 2.25rem;
+    height: 1.25rem;
+    padding: 0;
+    border: 0.09375rem solid var(--persian);
+    border-radius: 0;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 200ms ease;
+  }
+
+  .switch-track.is-on {
+    background-color: var(--persian);
+  }
+
+  .switch-thumb {
+    position: absolute;
+    top: 0.09375rem;
+    left: 0.09375rem;
+    width: 0.875rem;
+    height: 0.875rem;
+    background-color: var(--persian);
+    pointer-events: none;
+    transition: transform 200ms ease, background-color 200ms ease;
+  }
+
+  .switch-track.is-on .switch-thumb {
+    background-color: var(--parchment);
+    transform: translateX(1rem);
+  }
+</style>
