@@ -40,15 +40,18 @@ _(Use `bun run build` rather than `bun build`, which invokes bun's own bundler i
 ├── src/
 │   ├── assets/
 │   │   ├── fonts/        # Source fonts (processed by Vite)
-│   │   └── images/       # loggia.jpg, the page background
+│   │   └── images/       # loggia1.jpg and loggia2.jpg, one is picked per visit as the backdrop
 │   │
 │   ├── components/
-│   │   ├── Card.astro    # One flashcard face, used on screen and in print
+│   │   ├── Card.astro      # One two-row card face (Italian, English)
+│   │   ├── CardPair.astro  # Phrase card over response card, used on screen and in print
 │   │   ├── Footer.astro
-│   │   ├── Header.astro  # Wordmark plus header-meta and header-tools slots
-│   │   ├── Nav.astro     # Unused, kept from the starter
-│   │   ├── Sheet.astro   # One US Letter sheet of 8 cards
-│   │   └── SEO.astro     # <title>, meta, canonical, OG, Twitter card
+│   │   ├── Header.astro    # Wordmark plus header-meta and header-tools slots
+│   │   ├── Nav.astro       # Unused, kept from the starter
+│   │   ├── Pagination.astro # Prev/next, counter, chips, with a slot for extra tools
+│   │   ├── Sheet.astro     # One US Letter sheet of 8 card pairs
+│   │   ├── Switch.astro    # Alpine bound on/off switch
+│   │   └── SEO.astro       # <title>, meta, canonical, OG, Twitter card
 │   │
 │   ├── content/
 │   │   ├── global.toon   # Site-wide values (name, URL, description, title postfix)
@@ -62,6 +65,7 @@ _(Use `bun run build` rather than `bun build`, which invokes bun's own bundler i
 │   │   └── BaseLayout.astro  # Root HTML shell, accepts SEO + JSON-LD props
 │   │
 │   ├── lib/
+│   │   ├── backdrops.ts  # Background images with their edge colours
 │   │   ├── cards.ts      # Word match markup parser
 │   │   └── content.ts    # loadGlobal(), loadPage() and loadData() helpers
 │   │
@@ -137,7 +141,6 @@ labels:
   it: Italian
 
 settings:
-  word_match: colour   # colour | numbers | off
   cream_print: false   # print on the cream paper colour instead of white
   cut_guides: true     # dashed cut lines on the print sheets
 
@@ -145,11 +148,11 @@ cards[25]{q_en,q_it,a_en,a_it}:
   "{1How}'s it {2going}?","{1Come} {2va}?","{1Pretty} {2good}, {3thanks}!","{1Abbastanza} {2bene}, {3grazie}!"
 ```
 
-Wrap a word or phrase in `{n…}` to link it to the same number in the other language. In `colour` mode each number gets one of `--match-1` to `--match-5`, in `numbers` mode the words are underlined with a superscript number, and `off` renders plain text. Parsed by `segment()` in `src/lib/cards.ts`, rendered by `Card.astro`. Load the set with `loadData<CardSet>('cards')`.
+Wrap a word or phrase in `{n…}` to link it to the same number in the other language. Each number gets one of `--match-1` to `--match-5`. The Word matching switch under the card turns the colours on, they are off by default. Parsed by `segment()` in `src/lib/cards.ts`, rendered by `Card.astro`. Each card is shown as a pair, the phrase over the response with Italian first, via `CardPair.astro`. Load the set with `loadData<CardSet>('cards')`.
 
 ### Browse and print
 
-State for the card browser lives in an Alpine store registered in `src/entrypoint.ts`: the current view (`browse` or `sheets`), the current card index (persisted to `localStorage`), and `print()`, which switches to the sheets view and then calls `window.print()`. Anything marked `data-noprint` is hidden when printing, and `@page` is set to US Letter with no margin so each `Sheet.astro` fills one page exactly.
+State for the card browser lives in an Alpine store registered in `src/entrypoint.ts`: the current view (`browse` or `sheets`), the current card index and the word matching flag (both persisted to `localStorage`), and `print()`, which switches to the sheets view and then calls `window.print()`. Anything marked `data-noprint` is hidden when printing, and `@page` is set to US Letter with no margin so each `Sheet.astro` fills one page exactly.
 
 ### Adding a content file for a new page
 
@@ -201,7 +204,7 @@ Configured in `astro.config.mjs`:
 
 ```js
 server: {
-  port: 14220,
+  port: 14780,
 },
 ```
 
@@ -299,6 +302,10 @@ To add a font:
   font-display: swap;
 }
 ```
+
+### Backdrop
+
+`src/lib/backdrops.ts` lists the background images by name. An inline script in `BaseLayout.astro` picks one per visit before first paint, sets `--bg-image` and `data-backdrop` on `<html>`, and reapplies them after each client-side navigation. The `.backdrop` element in `global.scss` is fixed behind the page: the image is centred at a share of the viewport set by `--backdrop-scale` and capped by `--backdrop-max` (80% and native size by default, the pergola overrides both to sit larger), and masked so all four edges dissolve into a fill chosen by `data-backdrop`. The pergola fades into parchment all around, the arch fades into `--persian` at the sides and bottom and parchment at the top centre. Below the large breakpoint the image goes back to a full bleed cover.
 
 ## Utilities and Conventions
 

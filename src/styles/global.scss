@@ -90,17 +90,68 @@ body {
   font-size: var(--text-sm);
   color: var(--persian);
   background-color: var(--parchment);
-  background-image:
-    linear-gradient(to bottom, var(--parchment) 0, color-mix(in srgb, var(--parchment) 55%, transparent) 21.25rem, transparent 38.75rem),
-    var(--bg-image, none);
-  background-position: 0 0, center bottom;
-  background-size: auto, cover;
-  background-repeat: repeat, no-repeat;
-  background-attachment: scroll, fixed;
+}
+
+/* Parchment veil over the top of the document so the header area stays calm */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 38.75rem;
+  z-index: -1;
+  background-image: linear-gradient(to bottom, var(--parchment) 0, color-mix(in srgb, var(--parchment) 55%, transparent) 21.25rem, transparent 100%);
+  pointer-events: none;
 }
 
 main {
   flex: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   Backdrop — fixed behind the page, the image is centred and masked so all
+   four edges dissolve into a fill chosen per image via html[data-backdrop]
+--------------------------------------------------------------------------- */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  background-color: var(--parchment);
+  pointer-events: none;
+}
+
+/* Pergola: the lighter image reads small, let it sit larger and upscale a little */
+:root[data-backdrop='pergola'] {
+  --backdrop-scale: 0.92;
+  --backdrop-max: 120rem;
+}
+
+/* Arch: ink at the sides and bottom, parchment at the top centre where the sky
+   opens. One opaque gradient, stacked alpha gradients band visibly in Firefox */
+:root[data-backdrop='arch'] .backdrop {
+  background-image: radial-gradient(ellipse 36% 44% at 50% 0, var(--parchment) 0, var(--parchment) 40%, var(--persian) 100%);
+}
+
+.backdrop::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--backdrop-width);
+  height: var(--backdrop-height);
+  transform: translate(-50%, -50%);
+  background: var(--bg-image, none) center / 100% 100% no-repeat;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 var(--backdrop-fade), #000 calc(100% - var(--backdrop-fade)), transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 var(--backdrop-fade), #000 calc(100% - var(--backdrop-fade)), transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 var(--backdrop-fade), #000 calc(100% - var(--backdrop-fade)), transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 var(--backdrop-fade), #000 calc(100% - var(--backdrop-fade)), transparent 100%);
+  mask-composite: intersect;
 }
 
 a {
@@ -486,7 +537,9 @@ body.no-cursor  { cursor: none; }
     background: white !important;
   }
 
-  [data-noprint] {
+  [data-noprint],
+  .backdrop,
+  body::before {
     display: none !important;
   }
 }
@@ -496,7 +549,10 @@ body.no-cursor  { cursor: none; }
 --------------------------------------------------------------------------- */
 
 @include large {
+  /* Small screens go back to a full bleed cover with no edge fades */
   :root {
+    --backdrop-width: max(100vw, calc(100vh * 1672 / 941));
+    --backdrop-fade: 0rem;
     --text-base: 1rem;
     --text-lg: 1.125rem;
     --text-xl: 1.25rem;

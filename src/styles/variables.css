@@ -48,6 +48,13 @@
    --container-padding: 1.75rem;
    --page-padding: 1.75rem;
 
+   /* Backdrop sits centred at a share of the viewport, capped relative to its native 1672px, and fades into the fill around it */
+   --backdrop-scale: 0.8;
+   --backdrop-max: 104.5rem;
+   --backdrop-width: min(var(--backdrop-max), calc(100vw * var(--backdrop-scale)), calc(100vh * var(--backdrop-scale) * 1672 / 941));
+   --backdrop-height: calc(var(--backdrop-width) * 941 / 1672);
+   --backdrop-fade: 6rem;
+
 
    /* -------------------------------------------------------------------------
      Shadows

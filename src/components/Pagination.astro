@@ -14,7 +14,7 @@ const [counterStart = '', counterRest = ''] = counter.split('{n}');
 const counterEnd = counterRest.replace('{total}', String(total));
 ---
 
-<div class="pagination">
+<div class="pager">
   <div class="controls">
     <button class="btn btn-outline arrow" aria-label={previous} @click="$store.frasi.prev()">←</button>
     <button class="btn btn-primary arrow" aria-label={next} @click="$store.frasi.next()">→</button>
@@ -37,7 +37,7 @@ const counterEnd = counterRest.replace('{total}', String(total));
 </div>
 
 <style>
-  .pagination {
+  .pager {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
