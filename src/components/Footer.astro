@@ -2,6 +2,11 @@
 ---
 
 <footer class="site-footer" role="contentinfo" data-noprint>
+  <svg class="footer-scissors" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="6" cy="6" r="3" />
+    <circle cx="6" cy="18" r="3" />
+    <path d="M8.1 8.1 20 20M8.1 15.9 20 4M8.1 8.1l4 4" />
+  </svg>
   <div class="footer-inner">
     <nav class="footer-nav" aria-label="Footer navigation">
       <ul role="list">
@@ -12,42 +17,66 @@
 </footer>
 
 <style>
+  /* Cut line on top, the shadow checkerboard dense beneath it and dissolving
+     into parchment by the bottom edge */
   .site-footer {
-    padding: 1rem var(--page-padding);
-    border-top: 0.0625rem solid var(--persian);
+    position: relative;
+    padding: 1.125rem var(--page-padding) 1.5rem;
+    border-top: 0.0625rem dashed var(--persian);
     background-color: var(--parchment);
-    /* Same 2px ink checkerboard as the card shadows */
+  }
+
+  .site-footer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
     background-image: repeating-conic-gradient(color-mix(in srgb, var(--persian) 55%, transparent) 0 25%, transparent 0 50%);
     background-size: 0.25rem 0.25rem;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 20%, transparent 85%);
+    mask-image: linear-gradient(to bottom, #000 0, #000 20%, transparent 85%);
+    pointer-events: none;
+  }
+
+  .footer-scissors {
+    position: absolute;
+    top: -0.5625rem;
+    left: var(--page-padding);
+    width: 1.125rem;
+    height: 1.125rem;
+    padding: 0 0.125rem;
+    box-sizing: content-box;
+    background-color: var(--parchment);
+    color: var(--persian);
   }
 
   .footer-inner {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     flex-wrap: wrap;
     gap: 1rem;
   }
 
   .footer-nav ul {
     display: flex;
-    gap: 0.5rem;
+    gap: 1.5rem;
   }
 
-  /* Each link is a solid cutout in the dither, inverting on hover */
+  /* Ink lettering with a parchment halo drawn behind it, so it stays readable
+     on the dither. paint-order keeps the stroke outside the letterforms */
   .footer-nav a {
-    display: inline-block;
-    padding: 0.4375rem 0.875rem;
-    background-color: var(--parchment);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.02em;
     color: var(--persian);
-    font-size: var(--text-xs);
-    font-weight: 500;
+    -webkit-text-stroke: 0.1875rem var(--parchment);
+    paint-order: stroke fill;
     text-decoration: none;
-    transition: background-color 200ms ease, color 200ms ease;
+    transition: color 200ms ease;
   }
 
   .footer-nav a:hover {
-    background-color: var(--persian);
-    color: var(--parchment);
+    color: var(--koamaru);
   }
 </style>
